@@ -1,8 +1,8 @@
 # executables
-.out
-.exe
-.app
+*.out
+*.exe
+*.app
 
 # sample inputs/outputs, can sometimes be really large
-.in
-.out
+*.in
+*.out
