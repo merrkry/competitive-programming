@@ -1,8 +1,10 @@
-# executables
-*.out
-*.exe
-*.app
+# ignore all files without extension
+*
+!*.*
+!*/
 
-# sample inputs/outputs, can sometimes be really large
+# input/output files
 *.in
 *.out
+
+!LICENSE
