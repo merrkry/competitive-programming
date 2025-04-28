@@ -24,17 +24,20 @@ void prepare() {
         if (i == 0 && j == 0 && k == 0)
           continue;
         for (int v = 0; v <= 1; ++v) { // value after operation
-          if (i >= 1) {
-            dp[0][v][i][j][k] |= (dp[1][v][i - 1][j][k] ^ 1);
-            dp[1][v][i][j][k] |= (dp[0][v][i - 1][j][k] ^ 1);
-          }
-          if (j >= 1) {
-            dp[0][v][i][j][k] |= (dp[1][v ^ 1][i][j - 1][k] ^ 1);
-            dp[1][v][i][j][k] |= (dp[0][v ^ 1][i][j - 1][k] ^ 1);
-          }
-          if (k >= 1) {
-            dp[0][v][i][j][k] |= (dp[1][0][i][j][k - 1] ^ 1);
-            dp[1][v][i][j][k] |= (dp[0][0][i][j][k - 1] ^ 1);
+          for (int w = 0; w <= 1; ++w) {
+            bool res = 1;
+            if (i >= 1) {
+              res &= (dp[w ^ 1][v][i - 1][j][k] ^ 1);
+            }
+            if (j >= 1) {
+              res &= (dp[w ^ 1][v ^ 1][i][j - 1][k] ^ 1);
+            }
+            if (k >= 1) {
+              res &= (dp[w ^ 1][0][i][j][k - 1] ^ 1);
+            }
+            dp[w][v][i][j][k] = res;
+            // std::printf("dp[%d][%d][%d][%d][%d]=%d\n", w, v, i, j, k,
+            //             dp[w][v][i][j][k]);
           }
         }
       }
@@ -60,14 +63,6 @@ void flush() {
   std::fflush(stdout);
 }
 
-void apply_card(char o, int x) {
-  if (o == '+') {
-    num += x;
-  } else {
-    num *= x;
-  }
-}
-
 int get_card_type(char o, int x) {
   if (o == '+' && x % 2 == 1)
     return 1;
@@ -76,14 +71,23 @@ int get_card_type(char o, int x) {
   return 0;
 }
 
+void apply_card(char o, int x) {
+  if (o == '+') {
+    num += x;
+  } else {
+    num *= x;
+  }
+  int type = get_card_type(o, x);
+  cards[type].erase(cards[type].find(std::make_pair(o, x)));
+  n_cards[type]--;
+}
+
 void play_card(int type) {
   auto candidate = cards[type].begin();
   // if (candidate == cards[type].end())
   //   std::printf("PANIC");
   std::printf("%c %d\n", candidate->first, candidate->second);
   apply_card(candidate->first, candidate->second);
-  cards[type].erase(candidate);
-  n_cards[type]--;
   flush();
 }
 
@@ -94,9 +98,6 @@ void accept_card() {
   // std::printf("LOG: card accpeted %c %d\n", o, x);
   flush();
   apply_card(o, x);
-  int type = get_card_type(o, x);
-  cards[type].erase(cards[type].find(std::make_pair(o, x)));
-  n_cards[type]--;
 }
 
 void play() {
@@ -136,7 +137,6 @@ int main() {
     std::scanf(" %c %d", &o, &x);
     add_card(get_card_type(o, x), o, x);
   }
-  std::printf("%d %d %d\n", n_cards[0], n_cards[1], n_cards[2]);
   prepare();
   std::scanf("%lld", &num);
   flush();
