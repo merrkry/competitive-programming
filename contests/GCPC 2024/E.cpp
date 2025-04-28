@@ -26,7 +26,7 @@ void prepare() {
         for (int v = 0; v <= 1; ++v) { // value after operation
           if (i >= 1) {
             dp[0][v][i][j][k] |= (dp[1][v][i - 1][j][k] ^ 1);
-            dp[1][v][i][j][k] |= (dp[0][v][i - 1][k][k] ^ 1);
+            dp[1][v][i][j][k] |= (dp[0][v][i - 1][j][k] ^ 1);
           }
           if (j >= 1) {
             dp[0][v][i][j][k] |= (dp[1][v ^ 1][i][j - 1][k] ^ 1);
@@ -136,6 +136,7 @@ int main() {
     std::scanf(" %c %d", &o, &x);
     add_card(get_card_type(o, x), o, x);
   }
+  std::printf("%d %d %d\n", n_cards[0], n_cards[1], n_cards[2]);
   prepare();
   std::scanf("%lld", &num);
   flush();

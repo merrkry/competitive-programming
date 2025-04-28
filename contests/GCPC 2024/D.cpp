@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 typedef long long ll;
 const ll mod = 1e9 + 7;
@@ -22,9 +23,12 @@ ll qpow(ll x, ll k) {
 ll rev(ll x) { return qpow(x, mod - 2); }
 
 void parse_decimal() {
-  ll num = std::atoi(input_buffer + 2), den = 1;
-  while (den <= num)
+  ll num = 0, den = 1;
+  for (int i = 2; i < strlen(input_buffer); ++i) {
+    num *= 10;
+    num += input_buffer[i] - '0';
     den *= 10;
+  }
   // std::printf("%d %d", num, den);
   p = (num * rev(den)) % mod;
   p = (1 - p + mod) % mod;
