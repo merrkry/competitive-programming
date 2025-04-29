@@ -2,7 +2,7 @@
 #include <cstring>
 
 const int N = 1e6 + 5;
-int n, k, q, len_s, len_t, dist[N][26], cnt[26], pref[N];
+int n, k, q, len_s, len_t, dist[N][26], cnt[26], pref[N], cache[N];
 char s[N], t[N];
 
 int main() {
@@ -38,6 +38,19 @@ int main() {
     if (!done)
       pref[i] = las;
   }
+  cache[len_s - 1] = dist[len_s - 1][pref[len_s - 1]] == -1 ? 1 : 2;
+  cache[len_s] = 1;
+  for (int i = len_s - 2; i >= 0; --i) {
+    if (dist[i][pref[i]] == -1) {
+      cache[i] = 1;
+      continue;
+    }
+    cache[i] = cache[i + dist[i][pref[i]] + 1] + 1;
+  }
+  // for (int i = 0; i < len_s; ++i) {
+  //   std::printf("%d ", cache[i]);
+  // }
+  // std::printf("\n");
   std::scanf("%d", &q);
   for (int i = 1; i <= q; ++i) {
     std::scanf(" %s", t);
@@ -64,22 +77,7 @@ int main() {
       std::printf("0\n");
       continue;
     }
-    int ans = 0;
-    bool done = false; // extra char possible
-    while (pos < len_s) {
-      int d = dist[pos][pref[pos]];
-      if (d == -1) {
-        done = true;
-        ++ans;
-        break;
-      } else {
-        ++ans;
-        pos += d + 1;
-      }
-    }
-    if (!done)
-      ++ans;
-    std::printf("%d\n", ans);
+    std::printf("%d\n", cache[pos]);
   }
   return 0;
 }

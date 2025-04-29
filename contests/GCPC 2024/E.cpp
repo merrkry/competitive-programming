@@ -23,8 +23,8 @@ void prepare() {
       for (int k = 0; k <= n_cards[2]; ++k) { // card 2
         if (i == 0 && j == 0 && k == 0)
           continue;
-        for (int v = 0; v <= 1; ++v) { // value after operation
-          for (int w = 0; w <= 1; ++w) {
+        for (int v = 0; v <= 1; ++v) {   // value after operation
+          for (int w = 0; w <= 1; ++w) { // who just played
             bool res = 1;
             if (i >= 1) {
               res &= (dp[w ^ 1][v][i - 1][j][k] ^ 1);
@@ -101,15 +101,16 @@ void accept_card() {
 }
 
 void play() {
-  int initial_choice = choose(0), me = 0;
-  if (initial_choice == -1) {
+  int me;
+  if (dp[1][num % 2][n_cards[0]][n_cards[1]][n_cards[2]]) {
+    me = 1;
     std::printf("you\n");
     flush();
-    me = 1;
     accept_card();
   } else {
+    me = 0;
     std::printf("me\n");
-    play_card(initial_choice);
+    play_card(choose(0));
   }
   flush();
 
