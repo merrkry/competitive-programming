@@ -55,7 +55,7 @@ The .out file with same name as source file in the same directory will be used i
         print("Error: unsupported language")
         exit(1)
 
-    if args.input_path == None:
+    if args.input_path is None:
         input_path = os.path.splitext(src_path)[0] + ".in"
     else:
         input_path = args.input_path
@@ -64,7 +64,7 @@ The .out file with same name as source file in the same directory will be used i
         exit(1)
 
     sample_path = args.sample_path
-    if sample_path == None:
+    if sample_path is None:
         auto_sample_path = os.path.splitext(src_path)[0] + ".out"
         if is_valid_path(auto_sample_path):
             sample_path = auto_sample_path
@@ -72,7 +72,7 @@ The .out file with same name as source file in the same directory will be used i
         if not is_valid_path(sample_path):
             print("Error: invalid sample output file")
             exit(1)
-    output_to_file = sample_path != None
+    output_to_file = sample_path is not None
     output_to_console = (not output_to_file) or args.always_show_output
 
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -134,17 +134,17 @@ The .out file with same name as source file in the same directory will be used i
                     break
                 if output_to_console:
                     print(line.strip())
-                if output_file != None:
+                if output_file is not None:
                     output_file.write(line)
 
             input_process.wait()
             if calc_process.wait() != 0:
                 raise subprocess.CalledProcessError(calc_process.returncode, calc_cmd)
 
-            if output_file != None:
+            if output_file is not None:
                 output_file.flush()
 
-            if output_file != None:
+            if output_file is not None:
                 print("\nDIFF:\n")
                 diff_process = subprocess.Popen(
                     ["diff", "-y", sample_path, output_path], stdout=None, text=True
